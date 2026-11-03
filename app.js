@@ -356,13 +356,6 @@
   const onScroll = () => floatBtn.classList.toggle('show', window.scrollY > 520);
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  // Pausar animaciones (accesibilidad)
-  $('#pausa').addEventListener('click', (e) => {
-    const paused = document.documentElement.classList.toggle('paused');
-    e.currentTarget.setAttribute('aria-pressed', String(paused));
-    e.currentTarget.textContent = paused ? 'Reanudar animaciones' : 'Pausar animaciones';
-  });
-
   observeReveals();
   cargarEventos();
   cargarDocs();

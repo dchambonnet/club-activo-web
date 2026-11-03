@@ -423,8 +423,6 @@ textarea{resize:vertical}
 .footer-grid{grid-template-columns:1.4fr .9fr .9fr 1.2fr}
 .foot-social{margin-top:1rem}
 .copy{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.8rem}
-.pause-btn{background:transparent;color:rgba(255,255,255,.88);border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:.4rem .95rem;font:500 .8rem var(--sans);cursor:pointer}
-.pause-btn:hover{background:rgba(255,255,255,.12)}
 
 /* Animaciones en pausa */
 .paused .ticker-track{animation:none}
@@ -449,3 +447,37 @@ textarea{resize:vertical}
 }
 @media (max-width:520px){.stats,.steps{grid-template-columns:1fr}}
 @media (max-width:960px){.nav>a:not(.btn){font-size:1.02rem}}
+
+/* =====================================================================
+   AJUSTES PARA CELULAR (portada limpia y junta directiva compacta)
+   ===================================================================== */
+@media (max-width:960px){
+  .hero-inner{grid-template-columns:1fr;gap:1.8rem;padding:2.6rem 0 2.4rem}
+  .hero h1{font-size:2.3rem;margin-bottom:.5em}
+  .lead{font-size:1.02rem}
+  .eyebrow{font-size:.72rem;margin-bottom:.8rem}
+  .trust,.ticker{display:none}
+  .hero-actions{margin-top:1.4rem}
+  .next-card{padding:1.3rem;border-radius:22px}
+  .next-card h2{font-size:1.3rem;margin:.7rem 0 .3rem}
+  .countdown{margin:1rem 0}
+  .countdown b{font-size:1.6rem}
+  .countdown div{padding:.6rem .3rem}
+  .next-actions .btn{flex:1 1 100%}
+}
+@media (max-width:640px){
+  .section{padding:3.2rem 0}
+  .team{grid-template-columns:repeat(2,1fr);gap:.7rem}
+  .member{padding:1rem .5rem;border-radius:14px}
+  .member:hover{transform:none}
+  .avatar{width:60px;height:60px;font-size:1.15rem;margin-bottom:.55rem}
+  .member h3{font-size:.92rem;line-height:1.2}
+  .member p{font-size:.72rem;line-height:1.25}
+}
+@media (max-width:640px){
+  .team{gap:.55rem}
+  .member{padding:.75rem .4rem}
+  .avatar{width:46px;height:46px;font-size:.95rem;margin-bottom:.4rem}
+  .member h3{font-size:.86rem}
+  .member p{font-size:.68rem}
+}
