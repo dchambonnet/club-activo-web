@@ -55,18 +55,50 @@
 
   /* ---------------- Contenido estático ---------------- */
   $('#year').textContent = new Date().getFullYear();
-  $('#stat-comites').textContent = C.comites.length;
-  $('#teleton-link').href = safeUrl(C.teletonUrl);
-  const mail = $('#mail-link'); mail.href = 'mailto:' + C.email; mail.textContent = C.email;
+  const setHref = (sel, url) => { const a = $(sel); if (a) a.href = safeUrl(url); };
+  setHref('#teleton-link', C.teletonUrl); setHref('#transp-link', C.transparenciaUrl);
+  setHref('#foot-teleton', C.teletonUrl); setHref('#donar-link', C.teletonUrl);
+
+  // Barra superior
+  const tbTel = $('#tb-tel'); tbTel.href = 'tel:' + C.telefonoHref; tbTel.textContent = '📞 ' + C.telefono;
+  const tbMail = $('#tb-mail'); tbMail.href = 'mailto:' + C.email; tbMail.textContent = '✉️ ' + C.email;
+  $('#tb-hours').textContent = '🕒 ' + (C.horarioCorto || C.horario);
+
+  // Textos institucionales
+  $('#cita').textContent = '“' + C.cita + '”';
+  $('#lema').textContent = '“' + C.lema + '”';
+  $('#foot-lema').textContent = C.lema;
+  C.quienesSomos.forEach((t) => $('#qs-parrafos').append(el('p', { text: t })));
+  C.mision.forEach((t) => $('#mision-lista').append(el('li', { text: t })));
+  $('#vision-texto').textContent = C.vision;
+
+  // Datos de contacto (sección Contacto y pie)
+  [['📍', C.direccion], ['📞', C.telefono, 'tel:' + C.telefonoHref], ['✉️', C.email, 'mailto:' + C.email], ['🕒', C.horario]]
+    .forEach(([ico, txt, href]) => $('#contacto-info').append(el('li', {},
+      el('span', { 'aria-hidden': 'true', text: ico }), href ? el('a', { href, text: txt }) : el('span', { text: txt }))));
+  $('#foot-contact').append(
+    el('li', { text: '📍 ' + C.direccion }),
+    el('li', {}, el('a', { href: 'tel:' + C.telefonoHref, text: '📞 ' + C.telefono })),
+    el('li', {}, el('a', { href: 'mailto:' + C.email, text: '✉️ ' + C.email })));
+
+  // Galería (solo si hay fotos)
+  if (C.galeria && C.galeria.length) {
+    $('#galeria').hidden = false;
+    C.galeria.forEach((g) => $('#galeria-grid').append(el('figure', { class: 'reveal' }, el('img', { src: g.src, alt: g.alt || '', loading: 'lazy' }))));
+  }
 
   // Ticker con nombres de comités (se duplica para el bucle infinito)
   const track = $('#ticker-track');
   [...C.comites, ...C.comites].forEach((c) => track.append(el('span', { text: c.nombre })));
 
-  // Redes sociales
-  const socialNames = { instagram: 'Instagram', facebook: 'Facebook', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
-  Object.entries(C.redes).filter(([, u]) => u).forEach(([k, u]) => {
-    $('#socials').append(el('a', { href: safeUrl(u), target: '_blank', rel: 'noopener', text: socialNames[k] || k }));
+  // Redes sociales (barra superior, contacto y pie)
+  const redNames = { instagram: 'Instagram', facebook: 'Facebook', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
+  Object.entries(C.redes).filter(([, r]) => r && r.url).forEach(([k, r]) => {
+    const name = redNames[k] || k;
+    const link = (text, cls) => el('a', { class: cls, href: safeUrl(r.url), target: '_blank', rel: 'noopener', text });
+    $('#tb-social').append(link(name));
+    $('#socials').append(link(name));
+    $('#foot-social').append(el('li', {}, link(name + ': ' + r.label)));
   });
 
   // Comités + filtros
@@ -114,6 +146,49 @@
   const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
   let eventos = [];
   let filtroEvento = 'todos';
+  let nextEv = null, cdTimer = null;
+
+  function postular(id) {
+    $('#vol-evento').value = id;
+    location.hash = '#voluntariado';
+    setTimeout(() => $('#vol-nombre').focus({ preventScroll: true }), 600);
+  }
+
+  function tick() {
+    if (!nextEv) return;
+    const ms = Math.max(0, new Date(nextEv.fecha).getTime() - Date.now());
+    $('#cd-d').textContent = Math.floor(ms / 864e5);
+    $('#cd-h').textContent = Math.floor((ms % 864e5) / 36e5);
+    $('#cd-m').textContent = Math.floor((ms % 36e5) / 6e4);
+  }
+
+  // Tarjeta "Próximo evento" del hero (el evento publicado más cercano en el tiempo)
+  function renderNext() {
+    nextEv = eventos.filter((e) => new Date(e.fecha).getTime() > Date.now()).sort((a, b) => new Date(a.fecha) - new Date(b.fecha))[0] || null;
+    const act = $('#next-actions'); act.replaceChildren();
+    clearInterval(cdTimer);
+    if (!nextEv) {
+      $('#next-tag').textContent = 'Próximamente';
+      $('#next-title').textContent = 'Pronto anunciaremos nuestro próximo evento';
+      $('#next-meta').textContent = 'Mientras tanto, súmate como voluntario.';
+      $('#countdown').hidden = true;
+      act.append(el('a', { class: 'btn btn-red btn-sm', href: '#voluntariado', text: 'Quiero ser voluntario' }));
+      return;
+    }
+    $('#countdown').hidden = false;
+    $('#next-tag').textContent = (tipoLabel[nextEv.tipo] || 'Evento') + (nextEv.demo ? ' · Ejemplo' : '');
+    $('#next-title').textContent = nextEv.titulo;
+    const f = new Date(nextEv.fecha);
+    $('#next-meta').textContent = f.toLocaleDateString('es-PA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) +
+      ' · ' + f.toLocaleTimeString('es-PA', { hour: 'numeric', minute: '2-digit' }) + (nextEv.lugar ? ' · ' + nextEv.lugar : '');
+    if (nextEv.voluntarios_abiertos) {
+      const b = el('button', { class: 'btn btn-red btn-sm', type: 'button', text: 'Postularme como voluntario' });
+      b.addEventListener('click', () => postular(nextEv.id));
+      act.append(b);
+    }
+    act.append(el('a', { class: 'btn btn-outline-dark btn-sm', href: '#eventos', text: 'Ver todos los eventos' }));
+    tick(); cdTimer = setInterval(tick, 30000);
+  }
 
   function demoEvents() {
     const d = (days) => new Date(Date.now() + days * 864e5).toISOString();
@@ -134,7 +209,7 @@
       const actions = el('div', { class: 'actions' });
       if (e.voluntarios_abiertos) {
         const b = el('button', { class: 'btn btn-red btn-sm', type: 'button', text: 'Postularme' });
-        b.addEventListener('click', () => { $('#vol-evento').value = e.id; location.hash = '#voluntariado'; setTimeout(() => $('#vol-nombre').focus({ preventScroll: true }), 600); });
+        b.addEventListener('click', () => postular(e.id));
         actions.append(b);
       }
       list.append(el('article', { class: 'event reveal' },
@@ -160,6 +235,7 @@
       if (error) { estado.textContent = 'No pudimos cargar los eventos en este momento.'; estado.className = 'status err'; eventos = []; }
       else eventos = data;
     }
+    renderNext();
     const volEv = $('#vol-evento');
     eventos.filter((e) => e.voluntarios_abiertos && !e.demo).forEach((e) => {
       const f = new Date(e.fecha).toLocaleDateString('es-PA', { day: 'numeric', month: 'short' });
@@ -225,6 +301,68 @@
   }));
 
   /* ---------------- Arranque ---------------- */
+  /* ---------------- Secciones nuevas ---------------- */
+  const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('paused');
+
+  // Impacto: cifras que cuentan hacia arriba al aparecer
+  C.impacto.forEach((st) => {
+    const n = st.auto ? C.comites.length : st.n;
+    $('#impacto-grid').append(el('div', { class: 'stat reveal' },
+      el('b', { 'data-n': n, 'data-pre': st.pre || '', 'data-suf': st.suf || '', text: (st.pre || '') + n + (st.suf || '') }),
+      el('span', { text: st.label })));
+  });
+  const counter = new IntersectionObserver((entries) => entries.forEach((en) => {
+    if (!en.isIntersecting) return;
+    counter.unobserve(en.target);
+    const node = en.target, n = Number(node.dataset.n), pre = node.dataset.pre, suf = node.dataset.suf;
+    if (reduceMotion()) return;
+    const t0 = performance.now(), dur = 1400;
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / dur), v = Math.round(n * (1 - Math.pow(1 - p, 3)));
+      node.textContent = pre + v + suf;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }), { threshold: .5 });
+  document.querySelectorAll('#impacto-grid b').forEach((b) => counter.observe(b));
+
+  // Historia
+  C.historia.forEach((h) => $('#historia-lista').append(el('li', { class: 'tl-item reveal' },
+    el('span', { class: 'tl-year', text: h.anio }),
+    el('div', { class: 'tl-body' }, el('h3', { text: h.titulo }), el('p', { text: h.texto })))));
+
+  // Transparencia: pasos
+  C.pasos.forEach((p, i) => $('#pasos-lista').append(el('li', { class: 'step reveal' },
+    el('span', { class: 'step-n', 'aria-hidden': 'true', text: String(i + 1) }),
+    el('h3', { text: p.t }), el('p', { text: p.d }))));
+
+  // Cómo donar
+  C.donar.forEach((d) => $('#donar-grid').append(el('div', { class: 'don-card reveal' },
+    el('span', { class: 'don-ico', 'aria-hidden': 'true', text: d.ico }), el('h3', { text: d.t }), el('p', { text: d.d }))));
+  $('#donar-aviso').textContent = '🔒 ' + C.donarAviso;
+
+  // Menú desplegable (teclado, toque y mouse)
+  document.querySelectorAll('.has-sub').forEach((g) => {
+    g.querySelector('.sub-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = g.classList.toggle('open');
+      e.currentTarget.setAttribute('aria-expanded', String(open));
+    });
+  });
+  document.addEventListener('click', () => document.querySelectorAll('.has-sub.open').forEach((g) => g.classList.remove('open')));
+
+  // Botón flotante "Donar" tras pasar la portada
+  const floatBtn = $('#donar-flotante');
+  const onScroll = () => floatBtn.classList.toggle('show', window.scrollY > 520);
+  window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Pausar animaciones (accesibilidad)
+  $('#pausa').addEventListener('click', (e) => {
+    const paused = document.documentElement.classList.toggle('paused');
+    e.currentTarget.setAttribute('aria-pressed', String(paused));
+    e.currentTarget.textContent = paused ? 'Reanudar animaciones' : 'Pausar animaciones';
+  });
+
   observeReveals();
   cargarEventos();
   cargarDocs();
