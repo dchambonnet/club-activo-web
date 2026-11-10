@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Club Activo 20-30 de Panamá — Un club, una misión: servir</title>
-  <meta name="description" content="Club cívico de jóvenes de 20 a 39 años que sirven a Panamá, en especial a la niñez. Eventos, impacto, historia, comités, Teletón 20-30, transparencia y voluntariado.">
+  <meta name="description" content="Club cívico de jóvenes de 20 a 39 años que sirven a Panamá, en especial a la niñez. Impacto, historia, comités, Teletón 20-30, transparencia y voluntariado.">
   <meta name="theme-color" content="#011689">
   <meta property="og:title" content="Club Activo 20-30 de Panamá">
-  <meta property="og:description" content="La juventud, para ser servida, debe servir. Eventos, impacto, historia, transparencia y voluntariado.">
+  <meta property="og:description" content="La juventud, para ser servida, debe servir. Impacto, historia, transparencia y voluntariado.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_PA">
   <meta property="og:image" content="hero.jpg">
@@ -53,7 +53,6 @@
             <a href="#junta">Junta Directiva</a>
           </div>
         </div>
-        <a href="#eventos">Eventos</a>
         <div class="has-sub">
           <button type="button" class="sub-btn" aria-haspopup="true">Evidencia <i aria-hidden="true">▾</i></button>
           <div class="sub">
@@ -81,7 +80,7 @@
           <p class="lead">Somos jóvenes de 20 a 39 años que dedicamos nuestro tiempo, de forma voluntaria, a servir a la comunidad, con especial atención a la niñez.</p>
           <div class="hero-actions">
             <a class="btn btn-red" href="#voluntariado">Quiero ser voluntario</a>
-            <a class="btn btn-yellow" href="#eventos">Ver próximos eventos</a>
+            <a class="btn btn-yellow" href="#comites">Conoce nuestros comités</a>
           </div>
           <ul class="trust">
             <li><span aria-hidden="true">❤️</span> Las donaciones van a la Teletón y a la Fundación</li>
@@ -90,16 +89,14 @@
           </ul>
         </div>
 
-        <aside class="next-card" id="next-card" aria-label="Próximo evento">
-          <span class="next-tag" id="next-tag">Próximo evento</span>
-          <h2 id="next-title">Cargando…</h2>
-          <p class="next-meta" id="next-meta"></p>
-          <div class="countdown" id="countdown" aria-live="off">
-            <div><b id="cd-d">0</b><span>días</span></div>
-            <div><b id="cd-h">0</b><span>horas</span></div>
-            <div><b id="cd-m">0</b><span>min</span></div>
+        <aside class="next-card" id="next-card" aria-label="Síguenos en redes">
+          <span class="next-tag">Mantente al día</span>
+          <h2>Nuestras actividades y eventos, en Instagram</h2>
+          <p class="next-meta">Síguenos para enterarte de lo que hacemos y de cómo sumarte como voluntario.</p>
+          <div class="next-actions">
+            <a class="btn btn-red btn-sm" id="hero-ig" href="#contacto" target="_blank" rel="noopener">Seguir en Instagram ↗</a>
+            <a class="btn btn-outline-dark btn-sm" href="#voluntariado">Quiero ser voluntario</a>
           </div>
-          <div class="next-actions" id="next-actions"></div>
         </aside>
       </div>
       <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker-track"></div></div>
@@ -110,21 +107,6 @@
     <section class="quote-band" aria-label="Cita">
       <div class="container"><blockquote id="cita"></blockquote></div>
     </section>
-
-    <!-- ============ EVENTOS ============ -->
-    <section class="section" id="eventos">
-      <div class="container">
-        <div class="section-head reveal">
-          <p class="kicker">Agenda</p>
-          <h2>Eventos y actividades</h2>
-          <p>Lo que hacemos y en lo que estaremos participando. En muchos puedes postularte como voluntario.</p>
-        </div>
-        <div class="chips" id="eventos-filtros" role="group" aria-label="Filtrar eventos por tipo"></div>
-        <p class="status" id="eventos-estado" role="status" aria-live="polite"></p>
-        <div class="events" id="eventos-lista"></div>
-      </div>
-    </section>
-
     <!-- ============ IMPACTO ============ -->
     <section class="section impact" id="impacto">
       <div class="container">
@@ -309,10 +291,10 @@
         <div class="reveal">
           <p class="kicker light">Voluntariado</p>
           <h2>¿Quieres ayudar? Te estamos esperando.</h2>
-          <p>Déjanos tus datos y cuéntanos en qué evento o comité te gustaría participar. Un miembro del Club te contactará.</p>
+          <p>Déjanos tus datos y cuéntanos en qué comité o actividad te gustaría participar. Un miembro del Club te contactará.</p>
           <ul class="checks">
             <li>No necesitas experiencia previa.</li>
-            <li>Participa en un evento puntual o súmate a un comité.</li>
+            <li>Participa en una actividad puntual o súmate a un comité.</li>
             <li>Conoce gente, desarrolla liderazgo y ayuda a Panamá.</li>
           </ul>
         </div>
@@ -322,10 +304,7 @@
             <div class="field"><label for="vol-correo">Correo *</label><input id="vol-correo" name="correo" type="email" autocomplete="email" required maxlength="160"></div>
             <div class="field"><label for="vol-tel">Teléfono / WhatsApp</label><input id="vol-tel" name="telefono" type="tel" autocomplete="tel" maxlength="30"></div>
           </div>
-          <div class="field-row">
-            <div class="field"><label for="vol-evento">Evento de interés</label><select id="vol-evento" name="evento_id"><option value="">Ninguno en particular</option></select></div>
-            <div class="field"><label for="vol-comite">Comité de interés</label><select id="vol-comite" name="comite"><option value="">Aún no lo sé</option></select></div>
-          </div>
+          <div class="field"><label for="vol-comite">Comité de interés</label><select id="vol-comite" name="comite"><option value="">Aún no lo sé</option></select></div>
           <div class="field"><label for="vol-mensaje">Cuéntanos un poco de ti</label><textarea id="vol-mensaje" name="mensaje" rows="3" maxlength="1000"></textarea></div>
           <div class="hp" aria-hidden="true"><label>No llenar<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
           <label class="consent"><input type="checkbox" name="consentimiento" required> <span>Autorizo al Club Activo 20-30 de Panamá a usar mis datos para contactarme sobre el voluntariado. *</span></label>
@@ -383,7 +362,6 @@
       <div>
         <h4>Evidencia</h4>
         <ul class="foot-list">
-          <li><a href="#eventos">Eventos</a></li>
           <li><a href="#impacto">Impacto</a></li>
           <li><a href="#historia">Historia</a></li>
           <li><a href="#transparencia">Transparencia</a></li>

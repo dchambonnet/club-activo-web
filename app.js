@@ -141,109 +141,10 @@
   // Asuntos del formulario de contacto
   C.asuntosContacto.forEach((a) => $('#con-asunto').append(el('option', { value: a, text: a })));
 
-  /* ---------------- Eventos (Supabase) ---------------- */
-  const tipoLabel = { club: 'Club', teleton: 'Teletón', fundacion: 'Fundación', firma: 'Firma' };
-  const meses = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-  let eventos = [];
-  let filtroEvento = 'todos';
-  let nextEv = null, cdTimer = null;
-
-  function postular(id) {
-    $('#vol-evento').value = id;
-    location.hash = '#voluntariado';
-    setTimeout(() => $('#vol-nombre').focus({ preventScroll: true }), 600);
-  }
-
-  function tick() {
-    if (!nextEv) return;
-    const ms = Math.max(0, new Date(nextEv.fecha).getTime() - Date.now());
-    $('#cd-d').textContent = Math.floor(ms / 864e5);
-    $('#cd-h').textContent = Math.floor((ms % 864e5) / 36e5);
-    $('#cd-m').textContent = Math.floor((ms % 36e5) / 6e4);
-  }
-
-  // Tarjeta "Próximo evento" del hero (el evento publicado más cercano en el tiempo)
-  function renderNext() {
-    nextEv = eventos.filter((e) => new Date(e.fecha).getTime() > Date.now()).sort((a, b) => new Date(a.fecha) - new Date(b.fecha))[0] || null;
-    const act = $('#next-actions'); act.replaceChildren();
-    clearInterval(cdTimer);
-    if (!nextEv) {
-      $('#next-tag').textContent = 'Próximamente';
-      $('#next-title').textContent = 'Pronto anunciaremos nuestro próximo evento';
-      $('#next-meta').textContent = 'Mientras tanto, súmate como voluntario.';
-      $('#countdown').hidden = true;
-      act.append(el('a', { class: 'btn btn-red btn-sm', href: '#voluntariado', text: 'Quiero ser voluntario' }));
-      return;
-    }
-    $('#countdown').hidden = false;
-    $('#next-tag').textContent = (tipoLabel[nextEv.tipo] || 'Evento') + (nextEv.demo ? ' · Ejemplo' : '');
-    $('#next-title').textContent = nextEv.titulo;
-    const f = new Date(nextEv.fecha);
-    $('#next-meta').textContent = f.toLocaleDateString('es-PA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) +
-      ' · ' + f.toLocaleTimeString('es-PA', { hour: 'numeric', minute: '2-digit' }) + (nextEv.lugar ? ' · ' + nextEv.lugar : '');
-    if (nextEv.voluntarios_abiertos) {
-      const b = el('button', { class: 'btn btn-red btn-sm', type: 'button', text: 'Postularme como voluntario' });
-      b.addEventListener('click', () => postular(nextEv.id));
-      act.append(b);
-    }
-    act.append(el('a', { class: 'btn btn-outline-dark btn-sm', href: '#eventos', text: 'Ver todos los eventos' }));
-    tick(); cdTimer = setInterval(tick, 30000);
-  }
-
-  function demoEvents() {
-    const d = (days) => new Date(Date.now() + days * 864e5).toISOString();
-    return [
-      { id: 'demo1', titulo: 'Evento de ejemplo: Colecta comunitaria', descripcion: 'Así se verá un evento publicado. Conecta Supabase para mostrar los eventos reales del Club.', tipo: 'club', fecha: d(14), lugar: 'Ciudad de Panamá', voluntarios_abiertos: true, demo: true },
-      { id: 'demo2', titulo: 'Evento de ejemplo: Lanzamiento Teletón', descripcion: 'Los eventos de la Teletón y la Fundación aparecen aquí con su propia etiqueta.', tipo: 'teleton', fecha: d(35), lugar: 'Por confirmar', voluntarios_abiertos: false, demo: true }
-    ];
-  }
-
-  function renderEventos() {
-    const list = $('#eventos-lista');
-    list.replaceChildren();
-    const rows = eventos.filter((e) => filtroEvento === 'todos' ? true : filtroEvento === 'voluntariado' ? e.voluntarios_abiertos : e.tipo === filtroEvento);
-    if (!rows.length) { list.append(el('div', { class: 'empty', text: 'No hay eventos en esta categoría por ahora. ¡Vuelve pronto!' })); return; }
-    rows.forEach((e) => {
-      const f = new Date(e.fecha);
-      const hora = f.toLocaleTimeString('es-PA', { hour: 'numeric', minute: '2-digit' });
-      const actions = el('div', { class: 'actions' });
-      if (e.voluntarios_abiertos) {
-        const b = el('button', { class: 'btn btn-red btn-sm', type: 'button', text: 'Postularme' });
-        b.addEventListener('click', () => postular(e.id));
-        actions.append(b);
-      }
-      list.append(el('article', { class: 'event reveal' },
-        el('div', { class: 'date-badge', 'aria-label': f.toLocaleDateString('es-PA', { dateStyle: 'long' }) },
-          el('b', { text: String(f.getDate()) }), el('span', { text: meses[f.getMonth()] })),
-        el('div', {},
-          el('span', { class: 'pill ' + e.tipo, text: tipoLabel[e.tipo] || e.tipo }),
-          e.voluntarios_abiertos ? [' ', el('span', { class: 'pill vol', text: 'Buscamos voluntarios' })] : null,
-          e.demo ? [' ', el('span', { class: 'pill demo', text: 'Ejemplo' })] : null,
-          el('h3', { text: e.titulo }),
-          e.descripcion ? el('p', { text: e.descripcion }) : null,
-          el('div', { class: 'meta' }, el('span', { text: '🕒 ' + hora }), e.lugar ? el('span', { text: '📍 ' + e.lugar }) : null)),
-        actions));
-    });
-    observeReveals();
-  }
-
-  async function cargarEventos() {
-    const estado = $('#eventos-estado');
-    if (!sb) { eventos = demoEvents(); estado.textContent = 'Modo demo: conecta Supabase en js/config.js para ver los eventos reales.'; }
-    else {
-      const { data, error } = await sb.from('eventos').select('*').gte('fecha', new Date(Date.now() - 864e5).toISOString()).order('fecha', { ascending: true });
-      if (error) { estado.textContent = 'No pudimos cargar los eventos en este momento.'; estado.className = 'status err'; eventos = []; }
-      else eventos = data;
-    }
-    renderNext();
-    const volEv = $('#vol-evento');
-    eventos.filter((e) => e.voluntarios_abiertos && !e.demo).forEach((e) => {
-      const f = new Date(e.fecha).toLocaleDateString('es-PA', { day: 'numeric', month: 'short' });
-      volEv.append(el('option', { value: e.id, text: `${e.titulo} (${f})` }));
-    });
-    makeChips($('#eventos-filtros'), [['todos', 'Todos'], ['club', 'Club'], ['teleton', 'Teletón'], ['fundacion', 'Fundación'], ['firma', 'Firmas'], ['voluntariado', 'Buscan voluntarios']], (v) => { filtroEvento = v; renderEventos(); });
-    renderEventos();
-  }
+  // Enlace de Instagram en la tarjeta del inicio
+  const igBtn = $('#hero-ig');
+  if (igBtn && C.redes && C.redes.instagram && C.redes.instagram.url) igBtn.href = safeUrl(C.redes.instagram.url);
+  else if (igBtn) igBtn.hidden = true;
 
   /* ---------------- Transparencia (Supabase) ---------------- */
   const tipoDoc = { estado_financiero: ['📊', 'Estado financiero'], informe: ['📄', 'Informe'], acta: ['📝', 'Acta'], otro: ['📎', 'Documento'] };
@@ -294,7 +195,7 @@
 
   wireForm($('#form-voluntario'), $('#vol-estado'), 'voluntarios', (fd) => ({
     nombre: val(fd, 'nombre'), correo: val(fd, 'correo'), telefono: val(fd, 'telefono'),
-    evento_id: val(fd, 'evento_id'), comite: val(fd, 'comite'), mensaje: val(fd, 'mensaje'), consentimiento: true
+    comite: val(fd, 'comite'), mensaje: val(fd, 'mensaje'), consentimiento: true
   }));
   wireForm($('#form-contacto'), $('#con-estado'), 'contactos', (fd) => ({
     nombre: val(fd, 'nombre'), correo: val(fd, 'correo'), asunto: val(fd, 'asunto'), mensaje: val(fd, 'mensaje'), consentimiento: true
@@ -357,6 +258,5 @@
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
   observeReveals();
-  cargarEventos();
   cargarDocs();
 })();
