@@ -22,7 +22,7 @@ window.CLUB = {
     youtube:   { label: "clubactivo2030panama", url: "https://www.youtube.com/@clubactivo2030panama" }
   },
 
-  cita: "Uno nunca se enaltece tanto como cuando se arrodilla para ayudar a un niño.",
+  cita: "El hombre nunca se enaltece tanto como cuando se arrodilla para ayudar a un niño.",
   lema: "La juventud, para ser servida, debe servir.",
 
   quienesSomos: [
