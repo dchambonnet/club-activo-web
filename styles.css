@@ -240,7 +240,7 @@ textarea{resize:vertical}
   .event .actions{grid-column:1 / -1}
   .field-row{grid-template-columns:1fr}
   .form{padding:1.4rem}
-  .brand-text small{display:none}
+  .brand-text small{display:block}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
