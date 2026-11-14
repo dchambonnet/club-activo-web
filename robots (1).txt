@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://club.activo20-30.org/sitemap.xml
