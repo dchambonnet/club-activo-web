@@ -78,6 +78,7 @@
           <div class="sub">
             <a href="#impacto">Impacto</a>
             <a href="#historia">Historia</a>
+            <a href="#actividades">Actividades</a>
             <a href="#transparencia">Transparencia</a>
           </div>
         </div>
@@ -282,16 +283,28 @@
       </div>
     </section>
 
-    <!-- ============ GALERÍA (se muestra solo si hay fotos) ============ -->
-    <section class="section alt" id="galeria" hidden>
+    <!-- ============ ACTIVIDADES (se muestra solo si hay actividades en content.js) ============ -->
+    <section class="section alt" id="actividades" hidden>
       <div class="container">
         <div class="section-head reveal">
-          <p class="kicker">Galería</p>
+          <p class="kicker">Actividades realizadas</p>
           <h2>Así servimos a Panamá.</h2>
+          <p class="acts-sub">Toca una actividad para ver sus fotos.</p>
         </div>
-        <div class="gallery" id="galeria-grid"></div>
+        <div class="acts" id="acts-grid"></div>
       </div>
     </section>
+
+    <!-- Visor de fotos -->
+    <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Fotos de la actividad" hidden>
+      <button type="button" class="lb-x" id="lb-x" aria-label="Cerrar">✕</button>
+      <button type="button" class="lb-nav lb-prev" id="lb-prev" aria-label="Foto anterior">‹</button>
+      <figure class="lb-fig">
+        <img id="lb-img" alt="">
+        <figcaption><strong id="lb-tit"></strong> <span id="lb-cnt"></span></figcaption>
+      </figure>
+      <button type="button" class="lb-nav lb-next" id="lb-next" aria-label="Foto siguiente">›</button>
+    </div>
 
     <!-- ============ JUNTA DIRECTIVA ============ -->
     <section class="section" id="junta">
@@ -384,6 +397,7 @@
         <ul class="foot-list">
           <li><a href="#impacto">Impacto</a></li>
           <li><a href="#historia">Historia</a></li>
+          <li><a href="#actividades">Actividades</a></li>
           <li><a href="#transparencia">Transparencia</a></li>
           <li><a id="foot-teleton" href="#teleton" target="_blank" rel="noopener">Teletón 20-30 ↗</a></li>
         </ul>
