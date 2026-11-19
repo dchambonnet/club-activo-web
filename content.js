@@ -151,7 +151,9 @@ window.CLUB = {
    *   fotos:   cuántas fotos tiene (01.jpg, 02.jpg, …); la 01 es la portada
    *   pies:    (opcional) texto corto para cada foto, en orden
    */
-  actividades: [
+  actividades: [],   // ← vacía = la sección y sus enlaces NO se muestran. Para activarla, pega abajo el bloque guardado.
+
+  /* Bloque guardado (copia lo de adentro de los corchetes de arriba para volver a mostrar Actividades):
     {
       titulo: "Voces que inspiran",
       fecha: "14 de noviembre de 2026",
@@ -166,7 +168,7 @@ window.CLUB = {
         "Un participante durante su presentación"
       ]
     }
-  ],
+  */
 
   juntaPeriodo: "Periodo 2026-2027",
   junta: [
