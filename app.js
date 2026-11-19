@@ -81,65 +81,10 @@
     el('li', {}, el('a', { href: 'tel:' + C.telefonoHref, text: '📞 ' + C.telefono })),
     el('li', {}, el('a', { href: 'mailto:' + C.email, text: '✉️ ' + C.email })));
 
-  // Actividades realizadas + visor de fotos (las imágenes se cargan solo cuando se necesitan)
-  const acts = (C.actividades || []).filter((x) => x && x.carpeta && x.fotos > 0);
-  if (acts.length) {
-    $('#actividades').hidden = false;
-    document.querySelectorAll('[data-acts]').forEach((n) => { n.hidden = false; });
-    const ruta = (x, n, mini) => 'actividades/' + encodeURIComponent(x.carpeta) + '/' + (mini ? 'mini/' : '') + String(n).padStart(2, '0') + '.jpg';
-    const lb = $('#lb'), lbImg = $('#lb-img');
-    let cur = null, idx = 1, opener = null, touchX = null;
-
-    const show = (n) => {
-      idx = ((n - 1 + cur.fotos) % cur.fotos) + 1;
-      lbImg.src = ruta(cur, idx);
-      lbImg.alt = (cur.pies && cur.pies[idx - 1]) || cur.titulo;
-      $('#lb-tit').textContent = (cur.pies && cur.pies[idx - 1]) || cur.titulo;
-      $('#lb-cnt').textContent = idx + ' / ' + cur.fotos;
-      // precarga solo la siguiente
-      if (cur.fotos > 1) new Image().src = ruta(cur, (idx % cur.fotos) + 1);
-    };
-    const abrir = (x, from) => {
-      cur = x; opener = from;
-      lb.hidden = false; document.body.classList.add('lb-open');
-      const multi = x.fotos > 1;
-      $('#lb-prev').hidden = !multi; $('#lb-next').hidden = !multi;
-      show(1); $('#lb-x').focus();
-    };
-    const cerrar = () => {
-      lb.hidden = true; document.body.classList.remove('lb-open');
-      lbImg.removeAttribute('src');
-      if (opener) opener.focus();
-    };
-    $('#lb-x').addEventListener('click', cerrar);
-    $('#lb-prev').addEventListener('click', () => show(idx - 1));
-    $('#lb-next').addEventListener('click', () => show(idx + 1));
-    lb.addEventListener('click', (e) => { if (e.target === lb || e.target.classList.contains('lb-fig')) cerrar(); });
-    document.addEventListener('keydown', (e) => {
-      if (lb.hidden) return;
-      if (e.key === 'Escape') cerrar();
-      else if (e.key === 'ArrowLeft') show(idx - 1);
-      else if (e.key === 'ArrowRight') show(idx + 1);
-    });
-    lb.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; }, { passive: true });
-    lb.addEventListener('touchend', (e) => {
-      if (touchX === null) return;
-      const dx = e.changedTouches[0].clientX - touchX; touchX = null;
-      if (Math.abs(dx) > 50 && cur.fotos > 1) show(idx + (dx < 0 ? 1 : -1));
-    });
-
-    acts.forEach((x) => {
-      const btn = el('button', { type: 'button', class: 'act reveal', 'aria-label': 'Ver fotos: ' + x.titulo },
-        el('span', { class: 'act-img' },
-          el('img', { src: ruta(x, 1, true), alt: '', loading: 'lazy', decoding: 'async' }),
-          el('span', { class: 'act-n', text: '📷 ' + x.fotos })),
-        el('span', { class: 'act-body' },
-          x.fecha ? el('small', { text: x.fecha }) : null,
-          el('strong', { text: x.titulo }),
-          x.resumen ? el('span', { text: x.resumen }) : null));
-      btn.addEventListener('click', () => abrir(x, btn));
-      $('#acts-grid').append(btn);
-    });
+  // Galería (solo si hay fotos)
+  if (C.galeria && C.galeria.length) {
+    $('#galeria').hidden = false;
+    C.galeria.forEach((g) => $('#galeria-grid').append(el('figure', { class: 'reveal' }, el('img', { src: g.src, alt: g.alt || '', loading: 'lazy' }))));
   }
 
   // Ticker con nombres de comités (se duplica para el bucle infinito)

@@ -143,32 +143,9 @@ window.CLUB = {
   ],
   donarAviso: "El Club y la Teletón no solicitan claves ni datos completos de tarjeta por mensaje. Dona únicamente desde teleton.com.",
 
-  /*
-   * ACTIVIDADES REALIZADAS (se muestran en la sección "Actividades").
-   * Para agregar una: sube su carpeta a /actividades/ en GitHub y copia un bloque como el de abajo
-   * al INICIO de la lista (la más nueva primero). Si la lista queda vacía, la sección no se muestra.
-   *   carpeta: nombre de la carpeta dentro de /actividades/
-   *   fotos:   cuántas fotos tiene (01.jpg, 02.jpg, …); la 01 es la portada
-   *   pies:    (opcional) texto corto para cada foto, en orden
-   */
-  actividades: [],   // ← vacía = la sección y sus enlaces NO se muestran. Para activarla, pega abajo el bloque guardado.
-
-  /* Bloque guardado (copia lo de adentro de los corchetes de arriba para volver a mostrar Actividades):
-    {
-      titulo: "Voces que inspiran",
-      fecha: "14 de noviembre de 2026",
-      resumen: "Patrocinamos el Primer Concurso Nacional de Oratoria Inclusiva del IPHE.",
-      texto: "El Club Activo 20-30 de Panamá participó como patrocinador en el Primer Concurso Nacional de Oratoria Inclusiva «Voces que inspiran», organizado por el Instituto Panameño de Habilitación Especial (IPHE). La gran final se celebró en el Teatro Ascanio Arosemena de la ACP, donde 18 estudiantes demostraron que no hay barreras para expresar sus ideas, defender sus derechos y compartir sus experiencias.",
-      carpeta: "2026-11-oratoria-inclusiva",
-      fotos: 4,
-      pies: [
-        "Pantalla de patrocinadores: Club Activo 20-30 – Teletón 20-30, Credicorp Bank y Cenutre",
-        "Los 18 estudiantes finalistas con sus reconocimientos",
-        "Entrega de reconocimientos a los participantes",
-        "Un participante durante su presentación"
-      ]
-    }
-  */
+  /* Galería (opcional): guarda las fotos junto a index.html y agrégalas aquí. Si queda vacía, la sección no se muestra.
+     Ejemplo: { src: "foto1.jpg", alt: "Entrega de bolsas escolares" } */
+  galeria: [],
 
   juntaPeriodo: "Periodo 2026-2027",
   junta: [
