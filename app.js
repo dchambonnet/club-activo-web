@@ -85,6 +85,7 @@
   const acts = (C.actividades || []).filter((x) => x && x.carpeta && x.fotos > 0);
   if (acts.length) {
     $('#actividades').hidden = false;
+    document.querySelectorAll('[data-acts]').forEach((n) => { n.hidden = false; });
     const ruta = (x, n, mini) => 'actividades/' + encodeURIComponent(x.carpeta) + '/' + (mini ? 'mini/' : '') + String(n).padStart(2, '0') + '.jpg';
     const lb = $('#lb'), lbImg = $('#lb-img');
     let cur = null, idx = 1, opener = null, touchX = null;
