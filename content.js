@@ -19,7 +19,9 @@ window.CLUB = {
     instagram: { label: "activo2030panama",     url: "https://www.instagram.com/activo2030panama/" },
     facebook:  { label: "Teleton2030Panama",    url: "https://www.facebook.com/Teleton2030Panama" },
     x:         { label: "teleton2030",          url: "https://x.com/teleton2030" },
-    youtube:   { label: "clubactivo2030panama", url: "https://www.youtube.com/@clubactivo2030panama" }
+    youtube:   { label: "clubactivo2030panama", url: "https://www.youtube.com/@clubactivo2030panama" },
+    tiktok:    { label: "teleton2030panama",    url: "https://www.tiktok.com/@teleton2030panama" },
+    linkedin:  { label: "Club Activo 20-30 de Panamá", url: "https://www.linkedin.com/company/club-activo-20-30-de-panam%C3%A1/" }
   },
 
   cita: "El hombre nunca se enaltece tanto como cuando se arrodilla para ayudar a un niño.",

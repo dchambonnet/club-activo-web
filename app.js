@@ -92,7 +92,7 @@
   [...C.comites, ...C.comites].forEach((c) => track.append(el('span', { text: c.nombre })));
 
   // Redes sociales (barra superior, contacto y pie)
-  const redNames = { instagram: 'Instagram', facebook: 'Facebook', x: 'X', youtube: 'YouTube', tiktok: 'TikTok' };
+  const redNames = { instagram: 'Instagram', facebook: 'Facebook', x: 'X', youtube: 'YouTube', tiktok: 'TikTok', linkedin: 'LinkedIn' };
   Object.entries(C.redes).filter(([, r]) => r && r.url).forEach(([k, r]) => {
     const name = redNames[k] || k;
     const link = (text, cls) => el('a', { class: cls, href: safeUrl(r.url), target: '_blank', rel: 'noopener', text });
